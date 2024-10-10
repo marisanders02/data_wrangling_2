@@ -372,6 +372,144 @@ html</p>
   read_html(&quot;https://www.bestplaces.net/cost_of_living/city/new_york/new_york&quot;) %&gt;% 
   html_table(header = TRUE) %&gt;% 
   first()</code></pre>
+<pre class="r"><code>swm_url &lt;- &quot;https://www.imdb.com/list/ls070150896/&quot;
+swm_html &lt;- read_html(swm_url)</code></pre>
+<pre class="r"><code>title_vec &lt;- 
+  swm_html %&gt;% 
+  html_elements(&quot;.ipc-title-link-wrapper .ipc-title__text&quot;) %&gt;% 
+  html_text()
+
+runtime_vec &lt;- 
+  swm_html %&gt;% 
+  html_elements(&quot;.dli-title-metadata-item:nth-child(2)&quot;) %&gt;% 
+  html_text()
+
+score_vec &lt;- 
+  swm_html %&gt;% 
+  html_elements(&quot;.metacritic-score-box&quot;) %&gt;% 
+  html_text()
+
+swm_df &lt;- tibble(
+  title = title_vec, 
+  runtime = runtime_vec, 
+  score = score_vec
+)</code></pre>
+<pre class="r"><code>books_html &lt;- read_html(&quot;https://books.toscrape.com/&quot;)
+
+books_html %&gt;% 
+  html_elements(&quot;.product_pod a&quot;) %&gt;% 
+  html_text()</code></pre>
+<pre><code>##  [1] &quot;&quot;                                     
+##  [2] &quot;A Light in the ...&quot;                   
+##  [3] &quot;&quot;                                     
+##  [4] &quot;Tipping the Velvet&quot;                   
+##  [5] &quot;&quot;                                     
+##  [6] &quot;Soumission&quot;                           
+##  [7] &quot;&quot;                                     
+##  [8] &quot;Sharp Objects&quot;                        
+##  [9] &quot;&quot;                                     
+## [10] &quot;Sapiens: A Brief History ...&quot;         
+## [11] &quot;&quot;                                     
+## [12] &quot;The Requiem Red&quot;                      
+## [13] &quot;&quot;                                     
+## [14] &quot;The Dirty Little Secrets ...&quot;         
+## [15] &quot;&quot;                                     
+## [16] &quot;The Coming Woman: A ...&quot;              
+## [17] &quot;&quot;                                     
+## [18] &quot;The Boys in the ...&quot;                  
+## [19] &quot;&quot;                                     
+## [20] &quot;The Black Maria&quot;                      
+## [21] &quot;&quot;                                     
+## [22] &quot;Starving Hearts (Triangular Trade ...&quot;
+## [23] &quot;&quot;                                     
+## [24] &quot;Shakespeare&#39;s Sonnets&quot;                
+## [25] &quot;&quot;                                     
+## [26] &quot;Set Me Free&quot;                          
+## [27] &quot;&quot;                                     
+## [28] &quot;Scott Pilgrim&#39;s Precious Little ...&quot;  
+## [29] &quot;&quot;                                     
+## [30] &quot;Rip it Up and ...&quot;                    
+## [31] &quot;&quot;                                     
+## [32] &quot;Our Band Could Be ...&quot;                
+## [33] &quot;&quot;                                     
+## [34] &quot;Olio&quot;                                 
+## [35] &quot;&quot;                                     
+## [36] &quot;Mesaerion: The Best Science ...&quot;      
+## [37] &quot;&quot;                                     
+## [38] &quot;Libertarianism for Beginners&quot;         
+## [39] &quot;&quot;                                     
+## [40] &quot;It&#39;s Only the Himalayas&quot;</code></pre>
+<pre class="r"><code>books_html %&gt;% 
+  html_elements(&quot;.price_color&quot;) %&gt;% 
+  html_text()</code></pre>
+<pre><code>##  [1] &quot;£51.77&quot; &quot;£53.74&quot; &quot;£50.10&quot; &quot;£47.82&quot; &quot;£54.23&quot; &quot;£22.65&quot; &quot;£33.34&quot; &quot;£17.93&quot;
+##  [9] &quot;£22.60&quot; &quot;£52.15&quot; &quot;£13.99&quot; &quot;£20.66&quot; &quot;£17.46&quot; &quot;£52.29&quot; &quot;£35.02&quot; &quot;£57.25&quot;
+## [17] &quot;£23.88&quot; &quot;£37.59&quot; &quot;£51.33&quot; &quot;£45.17&quot;</code></pre>
+<div id="use-api" class="section level2">
+<h2>Use API</h2>
+<pre class="r"><code>nyc_water &lt;- 
+  GET(&quot;https://data.cityofnewyork.us/resource/ia2d-e54m.csv&quot;) %&gt;% 
+  content()</code></pre>
+<pre><code>## Rows: 45 Columns: 4
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## dbl (4): year, new_york_city_population, nyc_consumption_million_gallons_per...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<p><strong>BRFSS Data</strong></p>
+<pre class="r"><code>brfss_data &lt;- 
+  GET(&quot;https://chronicdata.cdc.gov/resource/acme-vg9e.csv&quot;, 
+      query = list(&quot;$limit&quot; = 5000)) %&gt;% 
+  content()</code></pre>
+<pre><code>## Rows: 5000 Columns: 23
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (16): locationabbr, locationdesc, class, topic, question, response, data...
+## dbl  (6): year, sample_size, data_value, confidence_limit_low, confidence_li...
+## lgl  (1): locationid
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<p><strong>Pokemon API</strong></p>
+<pre class="r"><code>pokemon &lt;- 
+  GET(&quot;https://pokeapi.co/api/v2/pokemon/ditto&quot;) %&gt;%  
+  content()
+
+pokemon$height</code></pre>
+<pre><code>## [1] 3</code></pre>
+<pre class="r"><code>pokemon$abilities</code></pre>
+<pre><code>## [[1]]
+## [[1]]$ability
+## [[1]]$ability$name
+## [1] &quot;limber&quot;
+## 
+## [[1]]$ability$url
+## [1] &quot;https://pokeapi.co/api/v2/ability/7/&quot;
+## 
+## 
+## [[1]]$is_hidden
+## [1] FALSE
+## 
+## [[1]]$slot
+## [1] 1
+## 
+## 
+## [[2]]
+## [[2]]$ability
+## [[2]]$ability$name
+## [1] &quot;imposter&quot;
+## 
+## [[2]]$ability$url
+## [1] &quot;https://pokeapi.co/api/v2/ability/150/&quot;
+## 
+## 
+## [[2]]$is_hidden
+## [1] TRUE
+## 
+## [[2]]$slot
+## [1] 3</code></pre>
+</div>
 
 
 
