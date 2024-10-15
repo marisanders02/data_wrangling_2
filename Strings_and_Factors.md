@@ -147,3 +147,46 @@ as.numeric(sex_vec)
 ```
 
     ## [1] 1 1 2 2
+
+## Revisiting Examples
+
+``` r
+url = "https://samhda.s3-us-gov-west-1.amazonaws.com/s3fs-public/field-uploads/2k15StateFiles/NSDUHsaeShortTermCHG2015.htm"
+
+drug_use_html <- read_html(url)
+```
+
+**Cleaning the data with `str`**
+
+``` r
+marj_use_df <- 
+  drug_use_html %>% 
+  html_table() %>%
+  first() %>%  
+  slice(-1) %>% 
+  select(-contains("P Value")) %>% 
+  pivot_longer(
+    cols = -State, 
+    names_to = "age_year",
+    values_to = "percent"
+  ) %>% 
+  separate(age_year, into = c("age", "year"), sep = "\\(") %>% 
+  mutate(
+    year = str_replace(year, "\\)", ""), 
+    percent = str_remove(percent, "[a-c]$"),
+    percent = as.numeric(percent)
+  ) 
+```
+
+``` r
+marj_use_df %>%  
+  filter(age == "12-17", !State %in% c("Total U.S.", "South", "Northeast", "Midwest", "West")) %>% 
+  mutate(
+    State = fct_reorder(State, percent)
+  ) %>% 
+  ggplot(aes(x = State, y = percent, color = year)) + 
+  geom_point() + 
+  theme(axis.text = element_text(angle = 90, vjust = 0.5, hjust = 1))
+```
+
+![](Strings_and_Factors_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
