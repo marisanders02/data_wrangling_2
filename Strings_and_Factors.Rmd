@@ -12,3 +12,109 @@ library(p8105.datasets)
 ```
 
 
+# Strings
+
+```{r}
+string_vec <- c("my", "name", "is", "mari")
+
+str_detect(string_vec, "mari")
+
+str_replace(string_vec, "mari", "Mari")
+str_replace(string_vec, "e", "E")
+```
+
+
+```{r}
+string_vec <- c(
+  "i think we all rule for participating",
+  "i think i have been caught",
+  "i think this will be quite fun actually",
+  "it will be fun, i think"
+  )
+
+str_detect(string_vec, "i think")
+
+str_detect(string_vec, "^i think")
+
+str_detect(string_vec, "i think$")
+```
+
+^ indicates the beginning of the line
+$ indicates the end of the line
+
+```{r}
+string_vec <- c(
+  "Time for a Pumpkin Spice Latte!",
+  "went to the #pumpkinpatch last weekend",
+  "Pumpkin Pie is obviously the best pie",
+  "SMASHING PUMPKINS -- LIVE IN CONCERT!!"
+  )
+
+str_detect(string_vec,"pumpkin")
+
+str_detect(string_vec, "Pumpkin")
+
+str_detect(string_vec, "PUMPKIN")
+
+str_detect(string_vec, "[Pp]umpkin")
+
+```
+
+- [Pp] means either upper or lowercase P
+
+```{r}
+string_vec <- c(
+  '7th inning stretch',
+  '1st half soon to begin. Texas won the toss.',
+  'she is 5 feet 4 inches tall',
+  '3AM - cant sleep :('
+  )
+
+str_detect(string_vec, "[0-9][a-zA-Z]")
+```
+
+- Detects a number and a letter
+
+```{r}
+string_vec <- c(
+  'Its 7:11 in the evening',
+  'want to go to 7-11?',
+  'my flight is AA711',
+  'NetBios: scanning ip 203.167.114.66'
+  )
+str_detect(string_vec, "7.11")
+```
+
+- Detects number and a character then 2 numbers
+
+```{r}
+string_vec = c(
+  'The CI is [2, 5]',
+  ':-]',
+  ':-[',
+  'I found the answer on pages [6-7]'
+  )
+
+str_detect(string_vec, "\\[")
+```
+
+- Put \\ in front of a character you want to find
+
+# Factors 
+
+```{r}
+sex_vec <- factor(c("male", "male", "female", "female"))
+
+as.numeric(sex_vec)
+```
+
+**Releveling**
+
+```{r}
+sex_vec <- fct_relevel(sex_vec, "male")
+
+as.numeric(sex_vec)
+```
+
+
+
