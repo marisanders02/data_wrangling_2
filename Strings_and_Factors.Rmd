@@ -159,4 +159,84 @@ marj_use_df %>%
   theme(axis.text = element_text(angle = 90, vjust = 0.5, hjust = 1))
 ```
 
+**NYC Restaurant Inspections**
+
+```{r}
+data("rest_inspec")
+
+```
+
+```{r}
+rest_inspec %>% 
+  count(boro, grade) %>% 
+  pivot_wider(
+    names_from = grade, 
+    values_from = n
+  ) 
+```
+
+
+```{r}
+rest_inspec <- 
+  rest_inspec %>% 
+  filter(
+    str_detect(grade, "[A-C]"), !(boro == "Missing")
+  ) 
+```
+
+
+```{r}
+rest_inspec %>% 
+  mutate(dba = str_to_sentence(dba)) %>% 
+  filter(str_detect(dba, "Pizza"))
+```
+
+
+```{r}
+rest_inspec %>% 
+  mutate(dba = str_to_sentence(dba)) %>% 
+  filter(str_detect(dba, "Pizza")) %>% 
+  mutate(boro = fct_infreq(boro)) %>% 
+  ggplot(aes(x = boro)) + geom_bar()
+```
+
+
+```{r}
+rest_inspec %>% 
+  mutate(dba = str_to_sentence(dba)) %>% 
+  filter(str_detect(dba, "Pizza")) %>% 
+  mutate(boro = fct_relevel(boro, "STATEN ISLAND")) %>% 
+  ggplot(aes(x = boro)) + geom_bar()
+```
+
+
+```{r}
+rest_inspec %>% 
+  mutate(dba = str_to_sentence(dba)) %>% 
+  filter(str_detect(dba, "Pizza")) %>% 
+  mutate(
+         boro = str_replace(boro, "MANHATTAN", "THE CITY"),
+         boro = fct_infreq(boro)) %>% 
+  ggplot(aes(x = boro)) + geom_bar()
+```
+
+```{r}
+rest_inspec %>% 
+  mutate(dba = str_to_sentence(dba)) %>% 
+  filter(str_detect(dba, "Pizza")) %>% 
+  mutate(boro = fct_infreq(boro),
+         boro = fct_recode(boro, "THE CITY" = "MANHATTAN"),
+         ) %>% 
+  ggplot(aes(x = boro)) + geom_bar()
+```
+
+**Last thing on factors**
+
+```{r}
+rest_inspec  %>% 
+  mutate(dba = str_to_sentence(dba)) %>% 
+  filter(str_detect(dba, "Pizza")) %>% 
+  mutate(boro = fct_infreq(boro)) %>% 
+  lm(zipcode ~ boro, data = .)
+```
 
