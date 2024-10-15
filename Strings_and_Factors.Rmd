@@ -1,0 +1,14 @@
+---
+title: "Strings and Factors"
+author: "Mari Sanders"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(rvest)
+library(p8105.datasets)
+```
+
+
